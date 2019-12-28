@@ -1,0 +1,1040 @@
+{
+	"info": {
+		"_postman_id": "4a099a04-0c20-4140-8e55-413bf98a90c0",
+		"name": "rpgvault",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Campaigns",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22117f9c-4217-44d0-845d-b8c33ffc62c6",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"campaign-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"Mondy Night Tomb of Horrors\",\n\"start\":\"2017-01-12\",\n\"end\":\"\",\n\"players\":[\"5e078469fc8fb856ec68fd99\",\"5e0784c0fc8fb856ec68fd9d\", \"5e078444fc8fb856ec68fd98\", \"5e078528fc8fb856ec68fda1\"],\n\"characters\":[\"5e0786e9fc8fb856ec68fda5\",\"5e0786a5fc8fb856ec68fda4\",\"5e078656fc8fb856ec68fda3\",\"5e0785fffc8fb856ec68fda2\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e07849bfc8fb856ec68fd9b\",\n\"description\":\"Running the classic every other Monday night.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Character",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e18c3a1-28f6-447c-b736-b8c4a23b45aa",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"character-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"Frax Neerdo\",\n\"race\":\"TIEFLING\",\n\"class\":\"ROGUE\",\n\"level\":1,\n\"str\":10,\n\"dex\":18,\n\"con\":12,\n\"int\":16,\n\"wis\":12,\n\"cha\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"type\":\"PC\",\n\"player\":\"5e078469fc8fb856ec68fd99\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Player",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af6270bf-8e5f-4a99-adc8-793e79fd7b71",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"player-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"Andy Kirosawa\",\n\"email\":\"ak@notu.com\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Campaigns",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"ThunkStonebane\",\n\"crace\":\"HALF_ORC\",\n\"cclass\":\"RANGER\",\n\"level\":1,\n\"strength\":11,\n\"dexterity\":14,\n\"constituion\":15,\n\"intelligence\":12,\n\"wisdom\":15,\n\"charisma\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"ctype\":\"PC\",\n\"_class\":\"io.festerson.npcvault.domain.Character\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Campaigns for Player",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"ThunkStonebane\",\n\"crace\":\"HALF_ORC\",\n\"cclass\":\"RANGER\",\n\"level\":1,\n\"strength\":11,\n\"dexterity\":14,\n\"constituion\":15,\n\"intelligence\":12,\n\"wisdom\":15,\n\"charisma\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"ctype\":\"PC\",\n\"_class\":\"io.festerson.npcvault.domain.Character\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns?player={{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns"
+					],
+					"query": [
+						{
+							"key": "player",
+							"value": "{{player-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Campaigns for Player -- bad id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"ThunkStonebane\",\n\"crace\":\"HALF_ORC\",\n\"cclass\":\"RANGER\",\n\"level\":1,\n\"strength\":11,\n\"dexterity\":14,\n\"constituion\":15,\n\"intelligence\":12,\n\"wisdom\":15,\n\"charisma\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"ctype\":\"PC\",\n\"_class\":\"io.festerson.npcvault.domain.Character\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns?player=123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns"
+					],
+					"query": [
+						{
+							"key": "player",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Characters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/characters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Characters for Player",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/characters?player={{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters"
+					],
+					"query": [
+						{
+							"key": "player",
+							"value": "{{player-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Campaign",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"ThunkStonebane\",\n\"crace\":\"HALF_ORC\",\n\"cclass\":\"RANGER\",\n\"level\":1,\n\"strength\":11,\n\"dexterity\":14,\n\"constituion\":15,\n\"intelligence\":12,\n\"wisdom\":15,\n\"charisma\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"ctype\":\"PC\",\n\"_class\":\"io.festerson.npcvault.domain.Character\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/{{campaign-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"{{campaign-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Campaign -- bad id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"ThunkStonebane\",\n\"crace\":\"HALF_ORC\",\n\"cclass\":\"RANGER\",\n\"level\":1,\n\"strength\":11,\n\"dexterity\":14,\n\"constituion\":15,\n\"intelligence\":12,\n\"wisdom\":15,\n\"charisma\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"ctype\":\"PC\",\n\"_class\":\"io.festerson.npcvault.domain.Character\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Character",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/characters/{{character-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"{{character-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Character -- bad id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/characters/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Player",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/players/{{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"{{player-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Player -- bad id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/players/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Campaign",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"id\": \"{{campaign-id}}\",\n\"name\":\"Saturday Hoard of the Dragon Queen\",\n\"start\":\"2019-12-28\",\n\"end\":\"\",\n\"players\":[\"5e06bb55c3a44b0e74ee70a4\",\"5e06bb86c3a44b0e74ee70a5\"],\n\"characters\":[\"5e06bd2cc3a44b0e74ee70a6\",\"5e06bf96c3a44b0e74ee70a7\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e06bb16c3a44b0e74ee70a3\",\n\"description\":\"Homebrew of HotDQ. Runs every Saturday.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/{{campaign-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"{{campaign-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Campaign -- bad json id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"id\": \"5e06bfccc3\",\n\"name\":\"Saturday Hoard of the Dragon Queen\",\n\"start\":\"2019-12-28\",\n\"end\":\"\",\n\"players\":[\"5e06bb55c3a44b0e74ee70a4\",\"5e06bb86c3a44b0e74ee70a5\"],\n\"characters\":[\"5e06bd2cc3a44b0e74ee70a6\",\"5e06bf96c3a44b0e74ee70a7\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e06bb16c3a44b0e74ee70a3\",\n\"description\":\"Homebrew of HotDQ. Runs every Saturday.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/{{campaign-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"{{campaign-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Campaign -- bad ids",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"id\": \"5e06bfccc3a44b0e74ee7\",\n\"name\":\"Saturday Hoard of the Dragon Queen\",\n\"start\":\"2019-12-28\",\n\"end\":\"\",\n\"players\":[\"5e06bb55c3a44b0e74ee70a4\",\"5e06bb86c3a44b0e74ee70a5\"],\n\"characters\":[\"5e06bd2cc3a44b0e74ee70a6\",\"5e06bf96c3a44b0e74ee70a7\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e06bb16c3a44b0e74ee70a3\",\n\"description\":\"Homebrew of HotDQ. Runs every Saturday.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/5e06bfccc3a44b0e7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"5e06bfccc3a44b0e7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Campaign -- bad path id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{campaign-id}}\",\n    \"name\": \"Saturday Hoard of the Dragon Queen\",\n    \"start\": \"2019-12-28\",\n    \"end\": \"\",\n    \"players\": [\n        \"5e06bb55c3a44b0e74ee70a4\",\n        \"5e06bb86c3a44b0e74ee70a5\"\n    ],\n    \"characters\": [\n        \"5e06bd2cc3a44b0e74ee70a6\",\n        \"5e06bf96c3a44b0e74ee70a7\"\n    ],\n    \"npcs\": [],\n    \"monsters\": [],\n    \"dm\": \"5e06bb16c3a44b0e74ee70a3\",\n    \"description\": \"Homebrew of HotDQ. Runs every Saturday.\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/5e06bfccc3a44b0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"5e06bfccc3a44b0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Character",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{character-id}}\",\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/{{character-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"{{character-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Character -- bad path id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{character-id}}\",\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Character -- bad json id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 123,\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/{{character-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"{{character-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Character -- bad ids",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 123,\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Player",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{player-id}}\",\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/{{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"{{player-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Player -- bad path id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{player-id}}\",\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Player -- bad json id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 123,\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/{{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"{{player-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Player -- bad ids",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 123,\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Campaign",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"id\": \"{{campaign-id}}\",\n\"name\":\"Saturday Hoard of the Dragon Queen\",\n\"start\":\"2019-12-28\",\n\"end\":\"\",\n\"players\":[\"5e06bb55c3a44b0e74ee70a4\",\"5e06bb86c3a44b0e74ee70a5\"],\n\"characters\":[\"5e06bd2cc3a44b0e74ee70a6\",\"5e06bf96c3a44b0e74ee70a7\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e06bb16c3a44b0e74ee70a3\",\n\"description\":\"Homebrew of HotDQ. Runs every Saturday.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/{{campaign-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"{{campaign-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Campaign -- bad id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"id\": \"{{campaign-id}}\",\n\"name\":\"Saturday Hoard of the Dragon Queen\",\n\"start\":\"2019-12-28\",\n\"end\":\"\",\n\"players\":[\"5e06bb55c3a44b0e74ee70a4\",\"5e06bb86c3a44b0e74ee70a5\"],\n\"characters\":[\"5e06bd2cc3a44b0e74ee70a6\",\"5e06bf96c3a44b0e74ee70a7\"],\n\"npcs\":[],\n\"monsters\":[],\n\"dm\":\"5e06bb16c3a44b0e74ee70a3\",\n\"description\":\"Homebrew of HotDQ. Runs every Saturday.\",\n\"img\":\"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/campaigns/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Character",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{character-id}}\",\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/{{character-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"{{character-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Character -- bad id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{character-id}}\",\n    \"constituion\": 14,\n    \"name\": \"Thunk Stonebane\",\n    \"race\": \"HALF_ORC\",\n    \"class\": \"RANGER\",\n    \"level\": 2,\n    \"str\": 15,\n    \"dex\": 11,\n    \"con\": 14,\n    \"int\": 12,\n    \"wis\": 15,\n    \"cha\": 10,\n    \"ac\": 13,\n    \"hp\": 10,\n    \"cr\": 0,\n    \"type\": \"PC\",\n    \"img\": \"\",\n    \"player\": \"5e06bb86c3a44b0e74ee70a5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/characters/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Player",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{player-id}}\",\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/{{player-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"{{player-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Player -- bad id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{player-id}}\",\n    \"name\": \"Mary Jane Zlotnik\",\n    \"email\": \"mjz@notyou.com\",\n    \"img\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"123"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3b54e882-1919-4c6b-a8dd-5f0c9594dbf6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0a6a13e6-141b-4619-b776-00e413ad3ce1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
