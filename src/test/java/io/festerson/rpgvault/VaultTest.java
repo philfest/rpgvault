@@ -1,10 +1,10 @@
-package io.festerson.npcvault;
+package io.festerson.rpgvault;
 
-import io.festerson.npcvault.domain.Campaign;
-import io.festerson.npcvault.domain.Character;
-import io.festerson.npcvault.repository.CampaignRepository;
-import io.festerson.npcvault.repository.CharacterRepository;
-import io.festerson.npcvault.util.TestUtils;
+import io.festerson.rpgvault.domain.Campaign;
+import io.festerson.rpgvault.domain.Character;
+import io.festerson.rpgvault.repository.CampaignRepository;
+import io.festerson.rpgvault.repository.CharacterRepository;
+import io.festerson.rpgvault.util.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

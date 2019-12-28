@@ -1,10 +1,10 @@
-package io.festerson.npcvault.util;
+package io.festerson.rpgvault.util;
 
-import io.festerson.npcvault.domain.*;
-import io.festerson.npcvault.domain.Character;
-import io.festerson.npcvault.repository.CampaignRepository;
-import io.festerson.npcvault.repository.CharacterRepository;
-import io.festerson.npcvault.repository.PlayerRepository;
+import io.festerson.rpgvault.domain.*;
+import io.festerson.rpgvault.domain.Character;
+import io.festerson.rpgvault.repository.CampaignRepository;
+import io.festerson.rpgvault.repository.CharacterRepository;
+import io.festerson.rpgvault.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 

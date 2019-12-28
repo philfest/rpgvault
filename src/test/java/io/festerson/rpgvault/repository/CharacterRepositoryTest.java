@@ -1,10 +1,10 @@
-package io.festerson.npcvault.repository;
+package io.festerson.rpgvault.repository;
 
-import io.festerson.npcvault.domain.Character;
-import io.festerson.npcvault.domain.CharacterClass;
-import io.festerson.npcvault.domain.CharacterRace;
-import io.festerson.npcvault.domain.CharacterType;
-import io.festerson.npcvault.util.TestUtils;
+import io.festerson.rpgvault.domain.Character;
+import io.festerson.rpgvault.domain.CharacterClass;
+import io.festerson.rpgvault.domain.CharacterRace;
+import io.festerson.rpgvault.domain.CharacterType;
+import io.festerson.rpgvault.util.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

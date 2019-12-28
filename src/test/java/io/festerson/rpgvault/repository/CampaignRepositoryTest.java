@@ -1,6 +1,6 @@
-package io.festerson.npcvault.repository;
+package io.festerson.rpgvault.repository;
 
-import io.festerson.npcvault.domain.Campaign;
+import io.festerson.rpgvault.domain.Campaign;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
