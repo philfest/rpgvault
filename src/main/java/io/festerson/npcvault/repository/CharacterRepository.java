@@ -12,4 +12,7 @@ public interface CharacterRepository extends ReactiveMongoRepository<Character, 
 
         @Query("{ 'name': ?0 }")
         Mono<Character> findByName(String name);
+
+        @Query("{ 'playerId': ?0 }")
+        Flux<Character> getCharactersByPlayerId(String playerId);
 }

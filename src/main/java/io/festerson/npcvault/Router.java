@@ -32,9 +32,9 @@ public class Router {
     public RouterFunction<ServerResponse> route() {
 
         return RouterFunctions
-                .route(RequestPredicates.POST("/campaigns").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::getCampaign)
+                .route(RequestPredicates.POST("/campaigns").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::saveCampaign)
                 .andRoute(GET("/campaigns"), campaignHandler::getCampaigns)
-                .andRoute(GET("/campaigns/{id}"), campaignHandler::saveCampaign)
+                .andRoute(GET("/campaigns/{id}"), campaignHandler::getCampaign)
                 .andRoute(PUT("/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::updateCampaign)
                 .andRoute(DELETE("/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::deleteCampaign)
 

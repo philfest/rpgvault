@@ -33,8 +33,11 @@ public class CharacterHandlerImpl implements CharacterHandler{
     }
 
     public Mono<ServerResponse> getCharacters(ServerRequest request) {
-        Flux<Character> characters = this.characterRepository.findAll();
+      Flux<Character> characters = request.queryParam("player")
+                .map(player -> characterRepository.getCharactersByPlayerId(player))
+                .orElseGet(() -> characterRepository.findAll());
         return ServerResponse.ok().contentType(APPLICATION_JSON).body(characters, Character.class);
+
     }
 
     public Mono<ServerResponse> saveCharacter(ServerRequest request) {
