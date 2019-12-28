@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.festerson</groupId>
-    <artifactId>npcvault</artifactId>
+    <artifactId>rpgvault</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>rpgvault</name>
     <description>Character vault for D&amp;D 5e campaigns</description>
