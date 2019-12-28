@@ -75,7 +75,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"name\":\"Frax Neerdo\",\n\"race\":\"TIEFLING\",\n\"class\":\"ROGUE\",\n\"level\":1,\n\"str\":10,\n\"dex\":18,\n\"con\":12,\n\"int\":16,\n\"wis\":12,\n\"cha\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"type\":\"PC\",\n\"player\":\"5e078469fc8fb856ec68fd99\",\n\"img\":\"\"\n}"
+					"raw": "{\n\"name\":\"Frey Neldergard\",\n\"race\":\"HUMAN\",\n\"class\":\"BARD\",\n\"level\":1,\n\"str\":10,\n\"dex\":18,\n\"con\":12,\n\"int\":16,\n\"wis\":12,\n\"cha\":10,\n\"ac\":13,\n\"hp\":10,\n\"cr\":0,\n\"type\":\"PC\",\n\"player\":\"5e078469fc8fb856ec68fd99\",\n\"img\":\"\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/characters",
@@ -118,7 +118,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"name\":\"Andy Kirosawa\",\n\"email\":\"ak@notu.com\",\n\"img\":\"\"\n}"
+					"raw": "{\n\"name\":\"Steve Bishop\",\n\"email\":\"sb@notu.com\",\n\"img\":\"\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/players",
@@ -283,6 +283,31 @@
 						{
 							"key": "player",
 							"value": "{{player-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Characters for Player -- bad id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/characters?player=123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"characters"
+					],
+					"query": [
+						{
+							"key": "player",
+							"value": "123"
 						}
 					]
 				}

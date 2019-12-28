@@ -13,8 +13,7 @@ public class MongoReactiveConfiguration extends AbstractReactiveMongoConfigurati
 
     @Bean
     public MongoClient mongoClient() {
-        System.out.println("");
-        return MongoClients.create(String.format("mongodb://localhost:27017"));
+        return MongoClients.create("mongodb://localhost:27017");
     }
 
     @Override
@@ -24,6 +23,6 @@ public class MongoReactiveConfiguration extends AbstractReactiveMongoConfigurati
 
     @Override
     public com.mongodb.reactivestreams.client.MongoClient reactiveMongoClient() {
-        return com.mongodb.reactivestreams.client.MongoClients.create(String.format("mongodb://localhost:27017"));
+        return com.mongodb.reactivestreams.client.MongoClients.create("mongodb://localhost:27017");
     }
 }
