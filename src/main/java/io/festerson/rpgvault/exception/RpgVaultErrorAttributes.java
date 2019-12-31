@@ -18,6 +18,8 @@ public class RpgVaultErrorAttributes extends DefaultErrorAttributes {
         this.tracer = tracer;
     }
 
+    // Integrates with functional endpoints on its own.
+    // Annotaion-based endpoints have to get to here through RpgVaultExceptionHandler
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         final Throwable error = getError(request);
