@@ -32,16 +32,21 @@
         </rollingPolicy>
     </appender>
 
-    <!-- LOG everything at INFO level -->
-    <root level="info">
+    <appender name="Async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
         <appender-ref ref="RollingFile" />
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="Async" />
         <appender-ref ref="Console" />
     </root>
 
-    <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.baeldung" level="trace" additivity="false">
+    <!-- LOG my package at INFO
+    <logger name="io.festerson" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
+    -->
 
 </configuration>

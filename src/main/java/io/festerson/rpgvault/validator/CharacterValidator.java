@@ -5,7 +5,29 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-public class CharacterValidator implements Validator {
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class CharacterValidator extends AbstractValidator {
+
+    private static final List<String> REQUIRED_FIELDS =
+        Arrays.asList(
+            "name",
+            "crace",
+            "cclass",
+            "level",
+            "strength",
+            "constitution",
+            "dexterity",
+            "intelligence",
+            "wisdom",
+            "charisma",
+            "ac",
+            "hp",
+            "ctype",
+            "playerId");
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -14,19 +36,16 @@ public class CharacterValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required", "The name field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "crace", "field.required", "The crace field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "cclass", "field.required", "The cclass field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "level", "field.required", "The level field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "strength", "field.required", "The strength field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "constitution", "field.required", "The constitution field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dexterity", "field.required", "The dexterity field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "intelligence", "field.required", "The intelligence field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "wisdom", "field.required", "The wisdom field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "charisma", "field.required", "The charisma field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ac", "field.required", "The ac field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "hp", "field.required", "The hp field is required.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "ctype", "field.required", "The ctype field is required.");
-        //Character request = (Character) target;
+        Character character = (Character) target;
+        checkRequired(errors, REQUIRED_FIELDS);
+        checkMin(errors, "strength", character.getStrength(), 3);
+        checkMin(errors, "constitution", character.getConstitution(), 3);
+        checkMin(errors, "dexterity", character.getDexterity(), 3);
+        checkMin(errors, "intelligence", character.getIntelligence(), 3);
+        checkMin(errors, "wisdom", character.getWisdom(), 3);
+        checkMin(errors, "charisma", character.getCharisma(), 3);
+        checkMin(errors, "level", character.getLevel(), 1);
+        checkMin(errors, "ac", character.getAc(), 10);
+        checkMin(errors, "hp", character.getHp(), 1);
     }
 }

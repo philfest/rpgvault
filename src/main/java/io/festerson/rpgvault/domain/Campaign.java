@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
@@ -18,20 +19,32 @@ public class Campaign {
 
     @Id
     private String id;
+
+    @NotBlank
     private String name;
+
     private Date startDate;
+
     private Date endDate;
+
     @JsonProperty("characters")
     private List<String> characterIds;
+
     @JsonProperty("npcs")
     private List<String> npcIds;
+
     @JsonProperty("monsters")
     private List<String> monsterIds;
+
     @JsonProperty("players")
     private List<String> playerIds;
+
+    @NotBlank
     @JsonProperty("dm")
     private String dmId;
+
     private String description;
+
     private String imageUrl;
 
     public Campaign(

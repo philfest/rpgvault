@@ -21,18 +21,13 @@ public class ErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         final Throwable error = getError(request);
-        //System.out.println("error=" + error.getClass().getName());
         final Map<String, Object> errorAttributes = super.getErrorAttributes(request, false);
         errorAttributes.put(ErrorAttribute.TRACE_ID.value, tracer.traceId());
         if (error instanceof ServerWebInputException){
-            //System.out.printf("Caught an instance of: %s, err: %s", MethodArgumentNotValidException.class, error);
             final HttpStatus errorStatus = ((ServerWebInputException) error).getStatus();
             errorAttributes.replace(ErrorAttribute.STATUS.value, 400);
             errorAttributes.replace(ErrorAttribute.ERROR.value, errorStatus.getReasonPhrase());
             return errorAttributes;
-        }
-        for(String key : errorAttributes.keySet()) {
-            System.out.println(key + "=" + errorAttributes.get(key));
         }
         return errorAttributes;
     }

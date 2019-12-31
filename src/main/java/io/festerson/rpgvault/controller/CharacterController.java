@@ -3,22 +3,22 @@ package io.festerson.rpgvault.controller;
 import io.festerson.rpgvault.domain.Character;
 import io.festerson.rpgvault.repository.CharacterRepository;
 import io.festerson.rpgvault.validator.CharacterValidator;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+@CommonsLog
 @RestController
 @RequestMapping("/v1/characters")
 public class CharacterController {
@@ -49,8 +49,7 @@ public class CharacterController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<Character>> saveCharacter(@RequestBody Character character) {
-        validate(character);
+    public Mono<ResponseEntity<Character>> saveCharacter(@Valid @RequestBody Character character) {
         return characterRepository.save(character)
                 .map(saved -> ResponseEntity
                         .status(HttpStatus.CREATED)
@@ -62,8 +61,7 @@ public class CharacterController {
     }
 
     @PutMapping("{characterId}")
-    public Mono<ResponseEntity<Character>> updateCharacter(@PathVariable String characterId, @RequestBody Character character){
-        validate(character);
+    public Mono<ResponseEntity<Character>> updateCharacter(@Valid @RequestBody Character character, @PathVariable String characterId){
         return characterRepository.findById(characterId)
                 .flatMap(found -> {
                     found.setName(character.getName());
@@ -95,13 +93,5 @@ public class CharacterController {
                                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 )
                 .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    private void validate(Character character){
-        Errors errors = new BeanPropertyBindingResult(character, "character");
-        validator.validate(character, errors);
-        if (errors.hasErrors()) {
-            throw new ServerWebInputException(errors.toString());
-        }
     }
 }

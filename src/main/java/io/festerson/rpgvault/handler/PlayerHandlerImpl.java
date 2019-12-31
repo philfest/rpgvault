@@ -79,15 +79,15 @@ public class PlayerHandlerImpl implements PlayerHandler {
         return this.playerRepository.deleteById(playerId).then(ServerResponse.noContent().build());
     }
 
+    // Functional endpoints do not have @RequestBody and java.validation annotations exposed
+    // to them. They are not traditional @RestController endpoints and take ServerRequest as a parameter.
     private void validate(Player player){
         Errors errors = new BeanPropertyBindingResult(player, "player");
         validator.validate(player, errors);
         if (errors.hasErrors()) {
             List<FieldError> fieldErrors = errors.getFieldErrors();
             StringBuilder errorMessages = new StringBuilder();
-            for(FieldError e : fieldErrors){
-                errorMessages.append(e.getDefaultMessage() + " ");
-            }
+            fieldErrors.forEach(e -> errorMessages.append(e.getDefaultMessage() + " "));
             throw new ServerWebInputException(errorMessages.toString());
         }
     }

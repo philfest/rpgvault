@@ -3,6 +3,7 @@ package io.festerson.rpgvault.handler;
 import io.festerson.rpgvault.domain.Campaign;
 import io.festerson.rpgvault.repository.CampaignRepository;
 import io.festerson.rpgvault.validator.CampaignValidator;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -19,7 +20,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
-
+@CommonsLog
 @Component
 public class CampaignHandlerImpl implements CampaignHandler {
 
@@ -79,15 +80,15 @@ public class CampaignHandlerImpl implements CampaignHandler {
         return campaignRepository.deleteById(campaignId).then(ServerResponse.noContent().build());
     }
 
+    // Functional endpoints do not have @RequestBody and java.validation annotations exposed
+    // to them. They are not traditional @RestController endpoints and take ServerRequest as a parameter.
     private void validate(Campaign campaign){
         Errors errors = new BeanPropertyBindingResult(campaign, "campaign");
         validator.validate(campaign, errors);
         if (errors.hasErrors()) {
-            List<FieldError> fieldErrors = errors.getFieldErrors();
             StringBuilder errorMessages = new StringBuilder();
-            for(FieldError e : fieldErrors){
-                errorMessages.append(e.getDefaultMessage() + " ");
-            }
+            List<FieldError> fieldErrors = errors.getFieldErrors();
+            fieldErrors.forEach(e -> errorMessages.append(e.getDefaultMessage() + " "));
             throw new ServerWebInputException(errorMessages.toString());
         }
     }
