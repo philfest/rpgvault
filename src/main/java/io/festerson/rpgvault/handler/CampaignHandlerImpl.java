@@ -8,21 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 @CommonsLog
 @Component
-public class CampaignHandlerImpl implements CampaignHandler {
+public class CampaignHandlerImpl extends RpgVaultAbstractHandler implements CampaignHandler {
 
     private final CampaignRepository campaignRepository;
 
@@ -85,11 +81,6 @@ public class CampaignHandlerImpl implements CampaignHandler {
     private void validate(Campaign campaign){
         Errors errors = new BeanPropertyBindingResult(campaign, "campaign");
         validator.validate(campaign, errors);
-        if (errors.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder();
-            List<FieldError> fieldErrors = errors.getFieldErrors();
-            fieldErrors.forEach(e -> errorMessages.append(e.getDefaultMessage() + " "));
-            throw new ServerWebInputException(errorMessages.toString());
-        }
+        manageValidationErrors(errors);
     }
 }

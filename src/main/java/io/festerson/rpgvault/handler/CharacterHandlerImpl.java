@@ -7,21 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 
 @Component
-public class CharacterHandlerImpl implements CharacterHandler{
+public class CharacterHandlerImpl extends RpgVaultAbstractHandler implements CharacterHandler{
 
     private final CharacterRepository characterRepository;
 
@@ -84,10 +80,6 @@ public class CharacterHandlerImpl implements CharacterHandler{
     private void validate(Character character){
         Errors errors = new BeanPropertyBindingResult(character, "character");
         validator.validate(character, errors);
-        if (errors.hasErrors()) {
-            List<FieldError> fieldErrors = errors.getFieldErrors();
-            StringBuilder errorMessages = new StringBuilder();
-            fieldErrors.forEach(e -> errorMessages.append(e.getDefaultMessage() + " "));
-            throw new ServerWebInputException(errorMessages.toString());
-        }    }
+        manageValidationErrors(errors);
+    }
 }

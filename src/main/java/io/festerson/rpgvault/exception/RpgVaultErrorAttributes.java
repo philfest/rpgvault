@@ -9,11 +9,11 @@ import org.springframework.web.server.ServerWebInputException;
 import java.util.Map;
 
 @Component
-public class ErrorAttributes extends DefaultErrorAttributes {
+public class RpgVaultErrorAttributes extends DefaultErrorAttributes {
 
     private final ReqTracer tracer;
 
-    ErrorAttributes(ReqTracer tracer) {
+    RpgVaultErrorAttributes(ReqTracer tracer) {
         super(false);
         this.tracer = tracer;
     }

@@ -19,14 +19,14 @@ public class Character {
     @Id
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Every character must have a name!!!!!")
     private String name;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("race")
     private CharacterRace crace;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("class")
     private CharacterClass cclass;
 
@@ -63,7 +63,7 @@ public class Character {
     @Min(1)
     private Integer hp;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("type")
     private CharacterType ctype;
 
