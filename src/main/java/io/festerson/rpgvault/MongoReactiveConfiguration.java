@@ -13,7 +13,7 @@ public class MongoReactiveConfiguration extends AbstractReactiveMongoConfigurati
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb://localhost:27017");
+        return MongoClients.create("mongodb://localhost:27017/rpgvault");
     }
 
     @Override
@@ -23,6 +23,6 @@ public class MongoReactiveConfiguration extends AbstractReactiveMongoConfigurati
 
     @Override
     public com.mongodb.reactivestreams.client.MongoClient reactiveMongoClient() {
-        return com.mongodb.reactivestreams.client.MongoClients.create("mongodb://localhost:27017");
+        return com.mongodb.reactivestreams.client.MongoClients.create("mongodb://localhost:27017/rpgvaullt");
     }
 }
