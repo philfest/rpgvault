@@ -2,67 +2,93 @@ package io.festerson.rpgvault.handler;
 
 import io.festerson.rpgvault.domain.Player;
 import io.festerson.rpgvault.repository.PlayerRepository;
+import io.festerson.rpgvault.validator.PlayerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+
+
 
 @Component
 public class PlayerHandlerImpl implements PlayerHandler {
 
     private final PlayerRepository playerRepository;
 
+    private final Validator validator = new PlayerValidator();
+
     private static final Mono<ServerResponse> NOT_FOUND = ServerResponse.notFound().build();
+
 
     @Autowired
     public PlayerHandlerImpl(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 
-    public Mono<ServerResponse> getPlayer(ServerRequest request) {
-        String playerId = request.pathVariable("id");
-        Mono<ServerResponse> notFound = ServerResponse.notFound().build();
-        Mono<Player> player = this.playerRepository.findById(playerId);
-        return ServerResponse.ok().contentType(APPLICATION_JSON).body(player, Player.class).switchIfEmpty(notFound);
+    public Mono<ServerResponse> getPlayers(ServerRequest request) {
+        return this.playerRepository.findAll()
+                .collectList()
+                .flatMap(list -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(list)))
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
-    public Mono<ServerResponse> getPlayers(ServerRequest request) {
-        Flux<Player> players = this.playerRepository.findAll();
-        return ServerResponse.ok().contentType(APPLICATION_JSON).body(players, Player.class);
+    public Mono<ServerResponse> getPlayer(ServerRequest request) {
+        String playerId = request.pathVariable("id");
+        return this.playerRepository.findById(playerId)
+                .flatMap(player -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(player)))
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
     public Mono<ServerResponse> savePlayer(ServerRequest request) {
-        Mono<Player> player = request.bodyToMono(Player.class);
-        Mono<Player> playerSaved = player.flatMap(playerRepository::save);
-        return ServerResponse.status(HttpStatus.CREATED).contentType(APPLICATION_JSON).body(playerSaved, Player.class);
+        return request.bodyToMono(Player.class)
+                .doOnNext(this::validate)
+                .flatMap(playerRepository::save)
+                .flatMap(saved -> ServerResponse.status(201).contentType(APPLICATION_JSON).body(fromObject(saved)))
+                .switchIfEmpty(ServerResponse.status(500).build());
     }
 
     public Mono<ServerResponse> updatePlayer(ServerRequest request) {
         String pathId = request.pathVariable("id");
-        Mono<Player> playerToUpdate = request.bodyToMono(Player.class);
-        Mono<Player> updatedPlayer = playerToUpdate
+        return request.bodyToMono(Player.class)
+                .doOnNext(this::validate)
                 .filter(player -> player.getId().equals(pathId))
                 .filterWhen(valid ->
                         this.playerRepository.existsById(valid.getId()).map(exists -> exists.booleanValue())
                 )
-                .flatMap( c ->  this.playerRepository.save(c));
-
-        return updatedPlayer
-                .flatMap(player -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(player)))
-                .switchIfEmpty(NOT_FOUND);
+                .flatMap(playerRepository::save)
+                .flatMap(updated -> ServerResponse.status(200).contentType(APPLICATION_JSON).body(fromObject(updated)))
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
-    public Mono<ServerResponse> deletePlayer(ServerRequest request) {
+    public  Mono<ServerResponse> deletePlayer(ServerRequest request) {
         String playerId = request.pathVariable("id");
-        Mono<Void> playerMono = this.playerRepository.deleteById(playerId);
-        return playerMono
-                .flatMap(player -> ServerResponse.noContent().build())
-                .switchIfEmpty(NOT_FOUND);
+        // Cannot return a 404 when using a reactive delete because it returns a Mono<Void>
+        // switchIfEmpty() is too eager and will trigger whether delete happens or not.
+        // Annotation-based reactive model does allow more control
+        return this.playerRepository.deleteById(playerId).then(ServerResponse.noContent().build());
+    }
+
+    private void validate(Player player){
+        Errors errors = new BeanPropertyBindingResult(player, "player");
+        validator.validate(player, errors);
+        if (errors.hasErrors()) {
+            List<FieldError> fieldErrors = errors.getFieldErrors();
+            StringBuilder errorMessages = new StringBuilder();
+            for(FieldError e : fieldErrors){
+                errorMessages.append(e.getDefaultMessage() + " ");
+            }
+            throw new ServerWebInputException(errorMessages.toString());
+        }
     }
 }

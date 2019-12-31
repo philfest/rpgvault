@@ -65,7 +65,6 @@ public class TestUtils {
                 TestUtils.generateAbility(),
                 TestUtils.generateAc(),
                 TestUtils.generateHp(),
-                0,
                 CharacterType.PC,
                 null,
                 null);

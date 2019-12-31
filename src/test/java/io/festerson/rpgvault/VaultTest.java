@@ -39,7 +39,7 @@ public class VaultTest {
     private WebTestClient webTestClient;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         dropCreateCollections();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         /**campaignRepository

@@ -31,7 +31,7 @@ public class CharacterRepositoryTest {
     ReactiveMongoOperations operations;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() {
         operations.collectionExists(Character.class)
                 .flatMap(exists -> exists ? operations.dropCollection(Character.class) : Mono.just(exists))
                 .flatMap(o -> operations.createCollection(Character.class, new CollectionOptions(1024L * 1024L, 100L, true)))

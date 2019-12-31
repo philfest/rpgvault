@@ -2,21 +2,30 @@ package io.festerson.rpgvault.handler;
 
 import io.festerson.rpgvault.domain.Campaign;
 import io.festerson.rpgvault.repository.CampaignRepository;
+import io.festerson.rpgvault.validator.CampaignValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+
 
 @Component
 public class CampaignHandlerImpl implements CampaignHandler {
 
     private final CampaignRepository campaignRepository;
+
+    private final Validator validator = new CampaignValidator();
 
     private static final Mono<ServerResponse> NOT_FOUND = ServerResponse.notFound().build();
 
@@ -26,53 +35,60 @@ public class CampaignHandlerImpl implements CampaignHandler {
     }
 
     public Mono<ServerResponse> getCampaigns(ServerRequest request) {
-        Flux<Campaign> campaigns = request.queryParam("player")
+        return request.queryParam("player")
                 .map(player -> campaignRepository.getCampaignsByPlayerId(player))
-                .orElseGet(() -> campaignRepository.findAll());
-        return ServerResponse.ok().contentType(APPLICATION_JSON).body(campaigns, Campaign.class);
+                .orElseGet(() -> campaignRepository.findAll())
+                .collectList()
+                .flatMap(list -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(list)))
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
     public Mono<ServerResponse> getCampaign(ServerRequest request) {
         String campaignId = request.pathVariable("id");
-        //Mono<ServerResponse> notFound = ServerResponse.notFound().build();
-        Mono<Campaign> campaignMono = this.campaignRepository.findById(campaignId);
-        return campaignMono
+        return this.campaignRepository.findById(campaignId)
                 .flatMap(campaign -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(campaign)))
-                .switchIfEmpty(NOT_FOUND);
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
     public Mono<ServerResponse> saveCampaign(ServerRequest request) {
-        Mono<Campaign> campaign = request.bodyToMono(Campaign.class);
-        Mono<Campaign> campaignSaved = campaign.flatMap(campaignRepository::save);
-        return ServerResponse
-                .status(HttpStatus.CREATED)
-                .contentType(APPLICATION_JSON)
-                .body(campaignSaved, Campaign.class);
+       return request.bodyToMono(Campaign.class)
+               .doOnNext(this::validate)
+               .flatMap(campaignRepository::save)
+               .flatMap(saved -> ServerResponse.status(201).contentType(APPLICATION_JSON).body(fromObject(saved)))
+               .switchIfEmpty(ServerResponse.status(500).build());
     }
 
     public Mono<ServerResponse> updateCampaign(ServerRequest request) {
         String pathId = request.pathVariable("id");
-        Mono<Campaign> campaignToUpdate = request.bodyToMono(Campaign.class);
-        //Mono<ServerResponse> notFound = ServerResponse.notFound().build();
-        Mono<Campaign> updatedCampaign = campaignToUpdate
+        return request.bodyToMono(Campaign.class)
+                .doOnNext(this::validate)
                 .filter(campaign -> campaign.getId().equals(pathId))
                 .filterWhen(valid ->
-                    this.campaignRepository.existsById(valid.getId()).map(exists -> exists.booleanValue())
+                        this.campaignRepository.existsById(valid.getId()).map(exists -> exists.booleanValue())
                 )
-                .flatMap( c ->  this.campaignRepository.save(c));
-
-        return updatedCampaign
-                .flatMap(campaign -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(campaign)))
-                .switchIfEmpty(NOT_FOUND);
+                .flatMap(campaignRepository::save)
+                .flatMap(updated -> ServerResponse.status(200).contentType(APPLICATION_JSON).body(fromObject(updated)))
+                .switchIfEmpty(ServerResponse.status(404).build());
     }
 
     public Mono<ServerResponse> deleteCampaign(ServerRequest request) {
         String campaignId = request.pathVariable("id");
-        //Mono<ServerResponse> notFound = ServerResponse.notFound().build();
-        Mono<Void> campaignMono = this.campaignRepository.deleteById(campaignId);
-        return campaignMono
-                .flatMap(campaign -> ServerResponse.noContent().build())
-                .switchIfEmpty(NOT_FOUND);
+        // Cannot return a 404 when using a reactive delete because it returns a Mono<Void>
+        // switchIfEmpty() is too eager and will trigger whether delete happens or not.
+        // Annotation-based reactive model does allow more control
+        return campaignRepository.deleteById(campaignId).then(ServerResponse.noContent().build());
     }
 
+    private void validate(Campaign campaign){
+        Errors errors = new BeanPropertyBindingResult(campaign, "campaign");
+        validator.validate(campaign, errors);
+        if (errors.hasErrors()) {
+            List<FieldError> fieldErrors = errors.getFieldErrors();
+            StringBuilder errorMessages = new StringBuilder();
+            for(FieldError e : fieldErrors){
+                errorMessages.append(e.getDefaultMessage() + " ");
+            }
+            throw new ServerWebInputException(errorMessages.toString());
+        }
+    }
 }

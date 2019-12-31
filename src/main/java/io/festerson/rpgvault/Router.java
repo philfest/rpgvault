@@ -12,7 +12,6 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 
@@ -32,23 +31,22 @@ public class Router {
     public RouterFunction<ServerResponse> route() {
 
         return RouterFunctions
-                .route(RequestPredicates.POST("/campaigns").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::saveCampaign)
-                .andRoute(GET("/campaigns"), campaignHandler::getCampaigns)
-                .andRoute(GET("/campaigns/{id}"), campaignHandler::getCampaign)
-                .andRoute(PUT("/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::updateCampaign)
-                .andRoute(DELETE("/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::deleteCampaign)
+            .route(RequestPredicates.POST("/v2/campaigns").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::saveCampaign)
+            .andRoute(GET("/v2/campaigns"), campaignHandler::getCampaigns)
+            .andRoute(GET("/v2/campaigns/{id}"), campaignHandler::getCampaign)
+            .andRoute(PUT("/v2/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::updateCampaign)
+            .andRoute(DELETE("/v2/campaigns/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), campaignHandler::deleteCampaign)
 
-                .andRoute(POST("/players").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::savePlayer)
-                .andRoute(GET("/players"), playerHandler::getPlayers)
-                .andRoute(GET("/players/{id}"), playerHandler::getPlayer)
-                .andRoute(PUT("/players/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::updatePlayer)
-                .andRoute(DELETE("/players/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::deletePlayer)
+            .andRoute(POST("/v2/players").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::savePlayer)
+            .andRoute(GET("/v2/players"), playerHandler::getPlayers)
+            .andRoute(GET("/v2/players/{id}"), playerHandler::getPlayer)
+            .andRoute(PUT("/v2/players/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::updatePlayer)
+            .andRoute(DELETE("/v2/players/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), playerHandler::deletePlayer)
 
-                .andRoute(POST("/characters").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::saveCharacter)
-                .andRoute(GET("/characters"), characterHandler::getCharacters)
-                .andRoute(GET("/characters/{id}"), characterHandler::getCharacter)
-                .andRoute(PUT("/characters/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::updateCharacter)
-                .andRoute(DELETE("/characters/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::deleteCharacter);
-
+            .andRoute(POST("/v2/characters").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::saveCharacter)
+            .andRoute(GET("/v2/characters"), characterHandler::getCharacters)
+            .andRoute(GET("/v2/characters/{id}"), characterHandler::getCharacter)
+            .andRoute(PUT("/v2/characters/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::updateCharacter)
+            .andRoute(DELETE("/v2/characters/{id}").and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), characterHandler::deleteCharacter);
     }
 }
