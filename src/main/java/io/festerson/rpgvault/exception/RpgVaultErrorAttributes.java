@@ -19,18 +19,20 @@ public class RpgVaultErrorAttributes extends DefaultErrorAttributes {
     }
 
     // Integrates with functional endpoints on its own.
-    // Annotaion-based endpoints have to get to here through RpgVaultExceptionHandler
+    // Annotation-based endpoints have to get to here through RpgVaultExceptionHandler
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         final Throwable error = getError(request);
         final Map<String, Object> errorAttributes = super.getErrorAttributes(request, false);
         errorAttributes.put(ErrorAttribute.TRACE_ID.value, tracer.traceId());
+
         if (error instanceof ServerWebInputException){
             final HttpStatus errorStatus = ((ServerWebInputException) error).getStatus();
             errorAttributes.replace(ErrorAttribute.STATUS.value, 400);
             errorAttributes.replace(ErrorAttribute.ERROR.value, errorStatus.getReasonPhrase());
             return errorAttributes;
         }
+
         return errorAttributes;
     }
 
