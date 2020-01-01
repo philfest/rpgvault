@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @CommonsLog
 @RestController
-@RequestMapping("/v1/campaigns")
+@RequestMapping(value="/v1/campaigns")
 public class CampaignController {
 
     private final CampaignRepository campaignRepository;
@@ -27,64 +27,62 @@ public class CampaignController {
     private final Validator validator = new CampaignValidator();
 
     @Autowired
-    public CampaignController(CampaignRepository campaignRepository) {
-        this.campaignRepository = campaignRepository;
-    }
+    public CampaignController(CampaignRepository campaignRepository) { this.campaignRepository = campaignRepository; }
 
-    @GetMapping
+    @RequestMapping(value="", method = RequestMethod.GET)
     public Mono<ResponseEntity<List<Campaign>>> getCampaigns() {
         return campaignRepository.findAll()
-                .collectList()
-                .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+            .collectList()
+            .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
     }
 
-    @GetMapping(path = "/{campaignId}")
+    @RequestMapping(path = "/{campaignId}", method = RequestMethod.GET)
     public Mono<ResponseEntity<Campaign>> getCampaign(@PathVariable String campaignId) {
         return campaignRepository.findById(campaignId)
-                .map(campaign -> ResponseEntity.ok().body(campaign))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+            .map(campaign -> ResponseEntity.ok().body(campaign))
+            .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST)
     public Mono<ResponseEntity<Campaign>> saveCampaign(@Valid @RequestBody Campaign campaign) {
         return campaignRepository.save(campaign)
-                .map(saved -> ResponseEntity
-                        .status(HttpStatus.CREATED)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(saved))
-                .defaultIfEmpty(ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .build());
-    }
+            .map(saved -> ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(saved))
+            .defaultIfEmpty(ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build());
+}
 
-    @PutMapping("/{campaignId}")
+    @RequestMapping(value="/{campaignId}", method = RequestMethod.PUT)
     public Mono<ResponseEntity<Campaign>> updateCampaign(@Valid @RequestBody Campaign campaign, @PathVariable String campaignId){
         return campaignRepository.findById(campaignId)
-                .flatMap(found -> {
-                    found.setName(campaign.getName());
-                    found.setStartDate(campaign.getStartDate());
-                    found.setEndDate(campaign.getEndDate());
-                    found.setPlayerIds(campaign.getPlayerIds());
-                    found.setCharacterIds(campaign.getCharacterIds());
-                    found.setNpcIds(campaign.getNpcIds());
-                    found.setMonsterIds(campaign.getMonsterIds());
-                    found.setDmId(campaign.getDmId());
-                    found.setDescription(campaign.getDescription());
-                    found.setImageUrl(campaign.getImageUrl());
-                    return campaignRepository.save(found);
-                } )
-                .map(updatedCampaign -> ResponseEntity.ok(updatedCampaign))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+            .flatMap(found -> {
+                found.setName(campaign.getName());
+                found.setStartDate(campaign.getStartDate());
+                found.setEndDate(campaign.getEndDate());
+                found.setPlayerIds(campaign.getPlayerIds());
+                found.setCharacterIds(campaign.getCharacterIds());
+                found.setNpcIds(campaign.getNpcIds());
+                found.setMonsterIds(campaign.getMonsterIds());
+                found.setDmId(campaign.getDmId());
+                found.setDescription(campaign.getDescription());
+                found.setImageUrl(campaign.getImageUrl());
+                return campaignRepository.save(found);
+            } )
+            .map(updatedCampaign -> ResponseEntity.ok(updatedCampaign))
+            .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{campaignId}")
+    @RequestMapping(value="/{campaignId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<ResponseEntity<Void>> deleteCampaign(@PathVariable String campaignId){
         return campaignRepository.findById(campaignId)
-                .flatMap(deletedCampaign ->
-                        campaignRepository.delete(deletedCampaign)
-                                .then(Mono.just(ResponseEntity.noContent().<Void>build()))
-                )
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+            .flatMap(deletedCampaign ->
+                    campaignRepository.delete(deletedCampaign)
+                            .then(Mono.just(ResponseEntity.noContent().<Void>build()))
+            )
+            .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }

@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @CommonsLog
 @RestController
-@RequestMapping("/v1/players")
+@RequestMapping(value="/v1/players")
 public class PlayerController {
 
     private final PlayerRepository playerRepository;
@@ -34,21 +34,21 @@ public class PlayerController {
         this.playerRepository = playerRepository;
     }
 
-    @GetMapping
+    @RequestMapping(value="", method = RequestMethod.GET)
     public Mono<ResponseEntity<List<Player>>> getPlayers() {
         return playerRepository.findAll()
                 .collectList()
-                .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+                .map(allFound -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(allFound));
     }
 
-    @GetMapping("/{playerId}")
+    @RequestMapping(value="/{playerId}", method = RequestMethod.GET)
     public Mono<ResponseEntity<Player>> getPlayer(@PathVariable String playerId) {
         return playerRepository.findById(playerId)
-                .map(player -> ResponseEntity.ok().body(player))
+                .map(found -> ResponseEntity.ok().body(found))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST)
     public Mono<ResponseEntity<Player>> savePlayer(@Valid @RequestBody Player player) {
         return playerRepository.save(player)
                 .map(saved -> ResponseEntity
@@ -60,24 +60,24 @@ public class PlayerController {
                         .build());
     }
 
-    @PutMapping("/{playerId}")
+    @RequestMapping(value="/{playerId}", method = RequestMethod.PUT)
     public Mono<ResponseEntity<Player>> updatePlayer(@Valid @RequestBody Player player, @PathVariable String playerId){
         return playerRepository.findById(playerId)
-                .flatMap(found -> {
-                    found.setName(player.getName());
-                    found.setEmail(player.getEmail());
-                    found.setImageUrl(player.getImageUrl());
-                    return playerRepository.save(found);
+                .flatMap(toUpdate -> {
+                    toUpdate.setName(player.getName());
+                    toUpdate.setEmail(player.getEmail());
+                    toUpdate.setImageUrl(player.getImageUrl());
+                    return playerRepository.save(toUpdate);
                 } )
-                .map(updatedUser -> ResponseEntity.ok(updatedUser))
+                .map(updatedPlayer -> ResponseEntity.ok(updatedPlayer))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{playerId}")
+    @RequestMapping(value="/{playerId}", method = RequestMethod.DELETE)
     public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable String playerId){
         return playerRepository.findById(playerId)
-                .flatMap(existingUser ->
-                        playerRepository.delete(existingUser)
+                .flatMap(toDelete ->
+                        playerRepository.delete(toDelete)
                                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 )
                 .defaultIfEmpty(ResponseEntity.notFound().build());

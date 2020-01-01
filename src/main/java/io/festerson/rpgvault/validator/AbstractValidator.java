@@ -37,7 +37,8 @@ abstract class AbstractValidator implements Validator{
     }
 
     public void checkEmail(Errors errors, String field, String target) {
-        if(target != null && !target.contains("@"));
+        if(target != null && !target.contains("@")) {
             errors.rejectValue(field, EMAIL_FORMAT, "The field " + field + " must be a valid email address.");
+        }
     }
 }
