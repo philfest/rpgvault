@@ -1,9 +1,11 @@
 package io.festerson.rpgvault.exception;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,12 +23,18 @@ import java.util.Map;
 @Order(-2)
 public class RpgVaultExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-    public RpgVaultExceptionHandler(RpgVaultErrorAttributes g, ApplicationContext applicationContext,
+    @Autowired
+    @Lazy
+    RpgVaultErrorAttributes rpgVaultErrorAttributes;
+
+    public RpgVaultExceptionHandler(RpgVaultErrorAttributes rpgVaultErrorAttributes, ApplicationContext applicationContext,
                                     ServerCodecConfigurer serverCodecConfigurer) {
-        super(g, new ResourceProperties(), applicationContext);
+        super(rpgVaultErrorAttributes, new ResourceProperties(), applicationContext);
         super.setMessageWriters(serverCodecConfigurer.getWriters());
         super.setMessageReaders(serverCodecConfigurer.getReaders());
+        this.rpgVaultErrorAttributes = rpgVaultErrorAttributes;
     }
+
 
     @Override
     protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {

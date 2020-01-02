@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TestUtils {
 
@@ -44,7 +41,24 @@ public class TestUtils {
         return RND.nextInt((14 - 8) + 1) + 8;
     }
 
-    public static Character generateCharacter(String name){
+    public static Campaign generateCampaignRequiredsOnly() {
+        Campaign c = new Campaign(
+            "TEST",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "5e078469fc8fb856ec68fd99",
+            "",
+            ""
+        );
+        c.setId("1234");
+        return c;
+    }
+
+    public static Character generateCharacter(String name, String player){
 
         if (name == null || name.isEmpty()) {
             Collections.shuffle(FIRST_NAMES);
@@ -67,7 +81,7 @@ public class TestUtils {
                 TestUtils.generateHp(),
                 CharacterType.PC,
                 null,
-                null);
+                player);
     }
 
     public static Player generatePlayer(String name){
@@ -86,26 +100,30 @@ public class TestUtils {
     }
 
     public void preFillCampaigns() throws Exception{
-        campaignRepository.saveAll(Flux.just(
-                        new Campaign("Test One", dateFormat.parse("2001-1-10"), dateFormat.parse("2002-1-11"), Arrays.asList("p10", "p11", "ptest"), Arrays.asList("c12", "c13"), Arrays.asList("n14", "n15"),  Arrays.asList("m16", "m17"), "18", "Description 1", "http://example.com/img1"),
-                        new Campaign("Test Two", dateFormat.parse("2002-2-20"), dateFormat.parse("2003-2-21"), Arrays.asList("p20", "p21"), Arrays.asList("c22", "c23"), Arrays.asList("n24", "n25"),  Arrays.asList("m26", "m27"), "28", "Description 2", "http://example.com/img2"),
-                        new Campaign("Test Three", dateFormat.parse("2003-3-30"), dateFormat.parse("2004-3-31"), Arrays.asList("p30", "p31", "ptest"), Arrays.asList("c32", "c33"), Arrays.asList("n34", "n35"),  Arrays.asList("m36", "m37"), "38", "Description 3", "http://example.com/img3"))).then().block();
+        campaignRepository.saveAll(generateCampaignFlux()).then().block();
+}
 
-
+    public static Flux<Campaign> generateCampaignFlux() throws Exception{
+        return(Flux.just(
+            new Campaign("Test One", dateFormat.parse("2001-1-10"), dateFormat.parse("2002-1-11"), Arrays.asList("p10", "p11", "ptest"), Arrays.asList("c12", "c13"), Arrays.asList("n14", "n15"),  Arrays.asList("m16", "m17"), "18", "Description 1", "http://example.com/img1"),
+            new Campaign("Test Two", dateFormat.parse("2002-2-20"), dateFormat.parse("2003-2-21"), Arrays.asList("p20", "p21"), Arrays.asList("c22", "c23"), Arrays.asList("n24", "n25"),  Arrays.asList("m26", "m27"), "28", "Description 2", "http://example.com/img2"),
+            new Campaign("Test Three", dateFormat.parse("2003-3-30"), dateFormat.parse("2004-3-31"), Arrays.asList("p30", "p31", "ptest"), Arrays.asList("c32", "c33"), Arrays.asList("n34", "n35"),  Arrays.asList("m36", "m37"), "38", "Description 3", "http://example.com/img3")));
     }
 
     public void preFillCharacters(){
-        characterRepository.saveAll(Flux.just(
-                        TestUtils.generateCharacter(null),
-                        TestUtils.generateCharacter(null),
-                        TestUtils.generateCharacter(null))).then().block();
+        characterRepository.saveAll(generateCharacterFlux()).then().block();
+    }
+
+    public static Flux<Character> generateCharacterFlux(){
+        return(Flux.just(TestUtils.generateCharacter(null, null),TestUtils.generateCharacter(null, null),TestUtils.generateCharacter(null, null)));
     }
 
     public void preFillPlayers(){
-        playerRepository.saveAll(Flux.just(
-                TestUtils.generatePlayer(null),
-                TestUtils.generatePlayer(null),
-                TestUtils.generatePlayer(null))).then().block();
+        playerRepository.saveAll(generatePlayerFlux()).then().block();
+    }
+
+    public static Flux<Player> generatePlayerFlux(){
+        return(Flux.just(TestUtils.generatePlayer(null),TestUtils.generatePlayer(null),TestUtils.generatePlayer(null)));
     }
 
     public static void main(String[] args){

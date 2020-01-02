@@ -2,34 +2,39 @@ package io.festerson.rpgvault;
 
 import io.festerson.rpgvault.domain.Campaign;
 import io.festerson.rpgvault.domain.Character;
+import io.festerson.rpgvault.domain.Player;
 import io.festerson.rpgvault.repository.CampaignRepository;
 import io.festerson.rpgvault.repository.CharacterRepository;
 import io.festerson.rpgvault.util.TestUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.CollectionOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VaultTest {
+@Import(Router.class)
+public class ApplicationTest {
 
     @Autowired
+    ApplicationContext context;
+
+    @MockBean
     CampaignRepository campaignRepository;
 
-    @Autowired
+    @MockBean
     CharacterRepository characterRepository;
 
     @Autowired
@@ -38,7 +43,7 @@ public class VaultTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Before
+    //@BeforeEach
     public void setup() {
         dropCreateCollections();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,13 +55,13 @@ public class VaultTest {
         */
          characterRepository
                 .saveAll(Flux.just(
-                        TestUtils.generateCharacter(null),
-                        TestUtils.generateCharacter(null),
-                        TestUtils.generateCharacter(null))).then().block();
+                        TestUtils.generateCharacter(null, null),
+                        TestUtils.generateCharacter(null, null),
+                        TestUtils.generateCharacter(null, null))).then().block();
 
     }
 
-    @After
+    //@AfterEach
     public void teardown(){
         //dropCreateCollections();
     }
@@ -75,33 +80,8 @@ public class VaultTest {
     }
 
     @Test
-    public void testPostCharacter(){
-        webTestClient
-                .post().uri("/characters")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBodyList(Character.class);
-    }
-
-    @Test
-    public void testPostPlayer(){
-        webTestClient
-                .post().uri("/players")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBodyList(Character.class);
-    }
-
-    @Test
-    public void testPostCampaign(){
-        webTestClient
-                .post().uri("/campaigns")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBodyList(Character.class);
+    public void contextLoads() {
+        assertTrue(true);
     }
 
 }
