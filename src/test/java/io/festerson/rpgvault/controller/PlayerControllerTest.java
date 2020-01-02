@@ -1,7 +1,7 @@
-package io.festerson.rpgvault.handler;
+package io.festerson.rpgvault.controller;
 
-import io.festerson.rpgvault.domain.Campaign;
-import io.festerson.rpgvault.repository.CampaignRepository;
+import io.festerson.rpgvault.domain.Player;
+import io.festerson.rpgvault.repository.PlayerRepository;
 import io.festerson.rpgvault.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CampaignHandlerTest {
+public class PlayerControllerTest {
 
     @Autowired
     ApplicationContext context;
@@ -24,29 +24,30 @@ public class CampaignHandlerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    CampaignRepository campaignRepository;
+    PlayerRepository playerRepository;
 
     @Test
-    public void testGetCampaignsHappyPath() throws Exception {
-        Flux<Campaign> c = TestUtils.generateCampaignFlux();
-        BDDMockito.given(campaignRepository.findAll()).willReturn(c);
+    public void testGetPlayersHappyPath() throws Exception {
+        Flux<Player> c = TestUtils.generatePlayerFlux();
+        BDDMockito.given(playerRepository.findAll()).willReturn(c);
         webTestClient
-                .get().uri("/v2/campaigns")
+                .get().uri("/v1/players")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(Campaign.class);
+                .expectBodyList(Player.class);
     }
 
     @Test
-    public void testGetCampaignByIdHappyPath() throws Exception {
-        Mono<Campaign> campaign = TestUtils.generateCampaignFlux().next();
-        BDDMockito.given(campaignRepository.findById("1")).willReturn(campaign);
+    public void testGetPlayerByIdHappyPath() throws Exception {
+        Mono<Player> player = TestUtils.generatePlayerFlux().next();
+        BDDMockito.given(playerRepository.findById("1")).willReturn(player);
         webTestClient
-                .get().uri("/v2/campaigns/1")
+                .get().uri("/v1/players/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Campaign.class);
+                .expectBody(Player.class);
     }
+
 }

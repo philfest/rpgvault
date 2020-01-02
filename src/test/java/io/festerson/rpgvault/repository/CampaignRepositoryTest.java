@@ -1,25 +1,23 @@
 package io.festerson.rpgvault.repository;
 
 import io.festerson.rpgvault.domain.Campaign;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.CollectionOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import static org.assertj.core.api.Assertions.*;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class CampaignRepositoryTest {
 
@@ -29,7 +27,7 @@ public class CampaignRepositoryTest {
     @Autowired
     ReactiveMongoOperations operations;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception{
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         operations.collectionExists(Campaign.class)
@@ -51,14 +49,14 @@ public class CampaignRepositoryTest {
     }
 
     @Test
-    public void getCampaignsByPlayerIdTest() {
+    public void getCampaignsByPlayerId() {
 
         List<Campaign> campaigns = repository.getCampaignsByPlayerId("ptest").collectList().block();
         assertThat(campaigns).hasSize(2);
     }
 
     @Test
-    public void findAllCampaignsTest() {
+    public void getAllCampaigns() {
 
         List<Campaign> ids = repository.findAll().collectList().block();
         assertThat(ids).hasSize(3);

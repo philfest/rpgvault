@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.server.HttpServerRequest;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -30,10 +31,15 @@ public class CampaignController {
     public CampaignController(CampaignRepository campaignRepository) { this.campaignRepository = campaignRepository; }
 
     @RequestMapping(value="", method = RequestMethod.GET)
-    public Mono<ResponseEntity<List<Campaign>>> getCampaigns() {
-        return campaignRepository.findAll()
-            .collectList()
-            .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+    public Mono<ResponseEntity<List<Campaign>>> getCampaigns(@RequestParam(value="player", required=false) String player) {
+        if (player == null || player.isEmpty()) {
+            return campaignRepository.findAll()
+                    .collectList()
+                    .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+        }
+        return campaignRepository.getCampaignsByPlayerId(player)
+                .collectList()
+                .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
     }
 
     @RequestMapping(path = "/{campaignId}", method = RequestMethod.GET)

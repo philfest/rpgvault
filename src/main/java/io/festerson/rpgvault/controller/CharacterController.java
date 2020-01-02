@@ -5,6 +5,7 @@ import io.festerson.rpgvault.repository.CharacterRepository;
 import io.festerson.rpgvault.validator.CharacterValidator;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 @CommonsLog
 @RestController
@@ -34,11 +36,18 @@ public class CharacterController {
         this.characterRepository = characterRepository;
     }
 
+    // Is there way to duplicate how the handler does this?
+    // Controller do not have access to ServerRequest.
     @RequestMapping(value="", method = RequestMethod.GET)
-    public Mono<ResponseEntity<List<Character>>> getCharacters() {
-        return characterRepository.findAll()
-            .collectList()
-            .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+    public Mono<ResponseEntity<List<Character>>> getCharacters(@RequestParam(value="player", required=false) String player) {
+        if (player == null || player.isEmpty()) {
+            return characterRepository.findAll()
+                    .collectList()
+                    .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
+        }
+        return characterRepository.getCharactersByPlayerId(player)
+                .collectList()
+                .map(list -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(list));
     }
 
     @RequestMapping(value="/{characterId}", method = RequestMethod.GET)
