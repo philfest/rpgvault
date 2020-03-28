@@ -1,7 +1,6 @@
 package io.festerson.rpgvault.controller;
 
 import io.festerson.rpgvault.domain.Campaign;
-import io.festerson.rpgvault.domain.Character;
 import io.festerson.rpgvault.repository.CampaignRepository;
 import io.festerson.rpgvault.util.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CampaignControllerTest {
@@ -29,10 +31,10 @@ public class CampaignControllerTest {
 
     @Test
     public void testGetCampaignsHappyPath() throws Exception {
-        Flux<Campaign> campaigns = TestUtils.generateCampaignFlux();
+        Flux<Campaign> campaigns = TestUtils.buildCampaignRepositoryTestCollection();
         BDDMockito.given(campaignRepository.findAll()).willReturn(campaigns);
         webTestClient
-                .get().uri("/v1/campaigns")
+                .get().uri("/campaigns")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -41,10 +43,10 @@ public class CampaignControllerTest {
 
     @Test
     public void testGetCampaignByIdHappyPath() throws Exception {
-        Mono<Campaign> campaign = TestUtils.generateCampaignFlux().next();
+        Mono<Campaign> campaign = Mono.just(TestUtils.buildCampaign());
         BDDMockito.given(campaignRepository.findById("1")).willReturn(campaign);
         webTestClient
-                .get().uri("/v1/campaigns/1")
+                .get().uri("/campaigns/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -53,18 +55,60 @@ public class CampaignControllerTest {
 
     @Test
     public void testGetCampaignsByPlayerIdHappyPath() throws Exception {
-        Flux<Campaign> campaigns = TestUtils.generateCampaignFlux();
+        Flux<Campaign> campaigns = TestUtils.buildCampaignRepositoryTestCollection();
         BDDMockito.given(campaignRepository.getCampaignsByPlayerId("1")).willReturn(campaigns);
         webTestClient
                 .get()
                 .uri(uriBuilder ->
                     uriBuilder
-                            .path("/v1/characters")
+                            .path("/campaigns")
                             .queryParam("player", "1")
                             .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(Character.class);
+                .expectBodyList(Campaign.class);
+    }
+
+    @Test
+    public void testCreateCampaignHappyPath() throws Exception {
+        Campaign campaign = TestUtils.buildCampaign();
+        BDDMockito.given(campaignRepository.save(any())).willReturn(Mono.just(campaign));
+        webTestClient
+                .post()
+                .uri("/campaigns")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromObject(TestUtils.buildCampaign()))// (Mono.just(TestUtils.buildCampaign()), Campaign.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(Campaign.class);
+    }
+
+    @Test
+    public void testUpdateCampaignHappyPath() throws Exception {
+        Campaign campaign = TestUtils.buildCampaign();
+        BDDMockito.given(campaignRepository.save(campaign)).willReturn(Mono.just(campaign));
+        BDDMockito.given(campaignRepository.findById("1")).willReturn(Mono.just(campaign));
+        webTestClient
+                .put()
+                .uri("/campaigns/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(campaign), Campaign.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Campaign.class);
+    }
+
+    @Test
+    public void testDeleteCampaignHappyPath() throws Exception {
+        Campaign campaign = TestUtils.buildCampaign();
+        BDDMockito.given(campaignRepository.findById("1")).willReturn(Mono.just(campaign));
+        BDDMockito.given(campaignRepository.delete(campaign)).willReturn(Mono.empty());
+        webTestClient
+                .delete().uri("/campaigns/1")
+                .exchange()
+                .expectStatus().isNoContent();
     }
 }

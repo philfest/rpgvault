@@ -38,23 +38,19 @@ public class CharacterRepositoryTest {
                 .then()
                 .block();
         repository
-                .saveAll(Flux.just(
-                        TestUtils.generateCharacter("Test Character","ptest"),
-                        TestUtils.generateCharacter(null, "ptest"),
-                        TestUtils.generateCharacter(null, null),
-                        TestUtils.generateCharacter(null, null))).then().block();
+                .saveAll(TestUtils.buildCharacterRepositoryTestCollection()).then().block();
     }
 
     @Test
     public void getCharacterByName() {
-        Character character = repository.findByName("Test Character").block();
+        Character character = repository.findByName(TestUtils.CHARACTER_NAME).block();
         assertThat(character).isNotNull();
     }
 
     @Test
     public void getCharactersByPlayerId() {
 
-        List<Character> campaigns = repository.getCharactersByPlayerId("ptest").collectList().block();
+        List<Character> campaigns = repository.getCharactersByPlayerId(TestUtils.PLAYER_ID).collectList().block();
         assertThat(campaigns).hasSize(2);
     }
 
@@ -62,7 +58,7 @@ public class CharacterRepositoryTest {
     public void getAllCharacters() {
 
         List<Character> ids = repository.findAll().collectList().block();
-        assertThat(ids).hasSize(4);
+        assertThat(ids).hasSize(5);
     }
 
 }

@@ -2,13 +2,11 @@ package io.festerson.rpgvault.controller;
 
 import io.festerson.rpgvault.domain.Player;
 import io.festerson.rpgvault.repository.PlayerRepository;
-import io.festerson.rpgvault.validator.PlayerValidator;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -20,12 +18,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @CommonsLog
 @RestController
-@RequestMapping(value="/v1/players")
 public class PlayerController {
 
     private final PlayerRepository playerRepository;
-
-    private final Validator validator = new PlayerValidator();
 
     private static final Mono<ServerResponse> NOT_FOUND = ServerResponse.notFound().build();
 
@@ -34,21 +29,21 @@ public class PlayerController {
         this.playerRepository = playerRepository;
     }
 
-    @RequestMapping(value="", method = RequestMethod.GET)
+    @RequestMapping(value="/players", method = RequestMethod.GET)
     public Mono<ResponseEntity<List<Player>>> getPlayers() {
         return playerRepository.findAll()
                 .collectList()
                 .map(allFound -> ResponseEntity.ok().contentType(APPLICATION_JSON).body(allFound));
     }
 
-    @RequestMapping(value="/{playerId}", method = RequestMethod.GET)
+    @RequestMapping(value="/players/{playerId}", method = RequestMethod.GET)
     public Mono<ResponseEntity<Player>> getPlayer(@PathVariable String playerId) {
         return playerRepository.findById(playerId)
                 .map(found -> ResponseEntity.ok().body(found))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value="/players", method = RequestMethod.POST)
     public Mono<ResponseEntity<Player>> savePlayer(@Valid @RequestBody Player player) {
         return playerRepository.save(player)
                 .map(saved -> ResponseEntity
@@ -60,7 +55,7 @@ public class PlayerController {
                         .build());
     }
 
-    @RequestMapping(value="/{playerId}", method = RequestMethod.PUT)
+    @RequestMapping(value="/players/{playerId}", method = RequestMethod.PUT)
     public Mono<ResponseEntity<Player>> updatePlayer(@Valid @RequestBody Player player, @PathVariable String playerId){
         return playerRepository.findById(playerId)
                 .flatMap(toUpdate -> {
@@ -69,11 +64,14 @@ public class PlayerController {
                     toUpdate.setImageUrl(player.getImageUrl());
                     return playerRepository.save(toUpdate);
                 } )
-                .map(updatedPlayer -> ResponseEntity.ok(updatedPlayer))
+                .map(updatedPlayer -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(updatedPlayer))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @RequestMapping(value="/{playerId}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/players/{playerId}", method = RequestMethod.DELETE)
     public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable String playerId){
         return playerRepository.findById(playerId)
                 .flatMap(toDelete ->

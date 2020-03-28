@@ -1,5 +1,6 @@
 package io.festerson.rpgvault.exception;
 
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.web.server.ServerWebInputException;
 
 import java.util.Map;
 
+@CommonsLog
 @Component
 public class RpgVaultErrorAttributes extends DefaultErrorAttributes {
 
@@ -25,6 +27,8 @@ public class RpgVaultErrorAttributes extends DefaultErrorAttributes {
         final Throwable error = getError(request);
         final Map<String, Object> errorAttributes = super.getErrorAttributes(request, false);
         errorAttributes.put(ErrorAttribute.TRACE_ID.value, tracer.traceId());
+
+        log.error("ERROR: " + error.getClass() + ". " + error.getMessage() + ". " + errorAttributes.toString());
 
         if (error instanceof ServerWebInputException){
             final HttpStatus errorStatus = ((ServerWebInputException) error).getStatus();

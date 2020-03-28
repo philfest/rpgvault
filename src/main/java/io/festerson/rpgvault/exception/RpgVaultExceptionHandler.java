@@ -45,17 +45,20 @@ public class RpgVaultExceptionHandler extends AbstractErrorWebExceptionHandler {
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, false);
 
+        System.out.println(">>>>>>>>>>>>> message: " + errorPropertiesMap.get("message"));
+
         if(errorPropertiesMap.containsKey("errors")) {
             StringBuilder errorMessages = new StringBuilder();
             List<FieldError> fieldErrors = (List) errorPropertiesMap.get("errors");
             fieldErrors.forEach(e -> errorMessages.append(e.getDefaultMessage() + " "));
             errorPropertiesMap.remove("errors");
+            System.out.println(">>>>>>>>>>>>> message: " + errorPropertiesMap.get("message"));
             errorPropertiesMap.replace("message", errorMessages.toString());
         }
 
-        return ServerResponse.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters.fromObject(errorPropertiesMap));
+        return ServerResponse
+            .status((Integer)errorPropertiesMap.get("status"))
+            .body(BodyInserters.fromObject(errorPropertiesMap));
     }
 
 }
